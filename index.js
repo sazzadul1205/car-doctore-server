@@ -11,6 +11,8 @@ require('dotenv').config();
 app.use(cors({
     origin: [
         // 'http://localhost:5173'
+        'https://car-doctor-49762.web.app/',
+        'https://car-doctor-49762.firebaseapp.com'
     ],
     credentials: true
 }));
@@ -33,16 +35,16 @@ const logger = (req, res, next) => {
     next();
 }
 const verifyToken = (req, res, next) => {
-    const token  = req?.cookies?.token;
+    const token = req?.cookies?.token;
     console.log('token in the middleware', token);
 
     // no token available
     if (!token) {
-        return res.status(401).send({message: 'unauthorized access'})
+        return res.status(401).send({ message: 'unauthorized access' })
     }
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) =>{
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
         if (err) {
-            return res.status(401).send({message: 'unauthorized access'})
+            return res.status(401).send({ message: 'unauthorized access' })
         }
         req.user = decoded;
         next()
@@ -102,7 +104,7 @@ async function run() {
             console.log(req.query.email);
             console.log('token user info', req.user);
             if (req.user.email !== req.query.email) {
-                return res.status(403 ).send({message: 'Forbidden access'})
+                return res.status(403).send({ message: 'Forbidden access' })
             }
             let query = {};
             if (req.query?.email) {
